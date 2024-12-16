@@ -44,7 +44,17 @@ bool c_keys::InitKeyboard()
 			}
 
 			if (Winver >= 26100) {
-				gafAsyncKeyStateExport = user_session_state + (Ubr >= 2314 ? 0x3828 : 0x3820);
+				if (Ubr >= 2605)
+				{
+					tmp = VMMDLL_ProcessGetModuleBaseU(mem.vHandle, pid, const_cast<LPSTR>("win32k.sys"));
+					g_session_global_slots = tmp + 0x82538;
+
+					gafAsyncKeyStateExport = user_session_state + 0x3830;
+				}
+				else
+				{
+					gafAsyncKeyStateExport = user_session_state + (Ubr >= 2314 ? 0x3828 : 0x3820);
+				}
 			} else if (Winver >= 22631 && Ubr >= 3810) {
 				gafAsyncKeyStateExport = user_session_state + 0x36A8;
 			} else {
